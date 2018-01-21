@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>  
+<script>
+window.onload = function () {
+  var chartThreeData = [];
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "https://api.coinmarketcap.com/v1/ticker/?limit=10.", true);
+  xhttp.send();//API CALL IN GENERAL WAY.
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) { 
+      var someJsonArray = JSON.parse(this.response);//EMBEDING VALUES TO VARIABLE AFTER PARSING RESPONSE DATA FROM STRING FORMAT TO OBJECT FORMAT
+      if(someJsonArray.length > 0){
+       for (var i = 0; i < someJsonArray.length; i++) {  
+            console.log(typeof(someJsonArray[i].price_usd));
+             chartThreeData.push({label:someJsonArray[i].name, y:parseInt(someJsonArray[i].price_usd)});
+        }
+      }    
+      var chart = new CanvasJS.Chart("chartContainer", {//USING CHART.JS HERE FOR EMBEDING VALUES AND FORMAT FOR BAR GRAPH
+        animationEnabled: true,
+        theme: "light2",
+        title:{
+          text: "Bar Chart"
+        },
+        axisY: {
+          title: "Curreny Values"
+        },
+        data: [{        
+          type: "column",  
+          showInLegend: true, 
+          legendMarkerColor: "grey",
+          dataPoints: chartThreeData
+        }]
+      });
+      chart.render();     
+  };
+}    
+}
+setTimeout(function() {
+  console.log("reloaded");
+  location.reload();
+   }, 50000);
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div><!--RENDERING VIEW HERE -->
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
